@@ -1,0 +1,1883 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>𝑷𝑹𝑶𝑴𝑷𝑻 𝑫𝑹𝑬 𝑴𝑨𝒀 🤩 — Prompt Generator</title>
+<script src="https://js.puter.com/v2/"></script>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --green-dark: #0d6b3a;
+    --green-mid: #2ea564;
+    --green-light: #4cc97f;
+    --green-pale: #e6ffef;
+    --green-soft: #b9e6c9;
+    --white: #ffffff;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Times New Roman', Times, serif;
+    min-height: 100vh;
+    color: #e6ffef;
+    padding: 18px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    overflow-x: hidden;
+    position: relative;
+    background: #0a2418;
+  }
+
+  /* ===== BACKGROUND VIDEO ===== */
+  .bg-video-wrap {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    overflow: hidden;
+    pointer-events: none;
+  }
+
+  .bg-video-wrap video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: center;
+    filter: saturate(1.05) brightness(0.9);
+  }
+
+  .bg-video-wrap::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(180deg, rgba(244, 255, 248, 0.15) 0%, rgba(230, 255, 239, 0.25) 50%, rgba(212, 245, 224, 0.40) 100%);
+    pointer-events: none;
+  }
+
+  /* ===== PARTIKEL ===== */
+  .particle-layer {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: -1;
+  }
+
+  .particle {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: radial-gradient(circle, rgba(76, 201, 127, 0.9) 0%, rgba(76, 201, 127, 0) 70%);
+    border-radius: 50%;
+    animation: floatParticle linear infinite;
+  }
+
+  @keyframes floatParticle {
+    0%   { transform: translateY(0) translateX(0); opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { transform: translateY(-100vh) translateX(40px); opacity: 0; }
+  }
+
+  /* ===== CONTAINER ===== */
+  .container {
+    width: 100%;
+    max-width: 720px;
+    background: transparent;
+    border: 1px solid rgba(185, 230, 201, 0.55);
+    border-radius: 14px;
+    padding: 22px 20px;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ===== SCROLL REVEAL ===== */
+  .reveal {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.7s ease, transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ===== TOP BANNER ===== */
+  .top-banner {
+    text-align: center;
+    margin-bottom: 14px;
+    padding: 10px 16px;
+    background: rgba(13, 40, 25, 0.35);
+    backdrop-filter: blur(10px) saturate(1.1);
+    -webkit-backdrop-filter: blur(10px) saturate(1.1);
+    border: 1px solid rgba(76, 201, 127, 0.55);
+    border-radius: 10px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+  }
+
+  .top-banner::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 20%, rgba(255,255,255,0.25) 50%, transparent 80%);
+    transform: translateX(-100%);
+    animation: shimmer 4.5s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  @keyframes shimmer {
+    0%   { transform: translateX(-100%); }
+    55%  { transform: translateX(100%); }
+    100% { transform: translateX(100%); }
+  }
+
+  .top-banner-title {
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #a7f3c8;
+    text-transform: uppercase;
+    animation: floatSoft 4s ease-in-out infinite;
+    text-shadow: 0 1px 8px rgba(0,0,0,0.6), 0 0 18px rgba(76,201,127,0.5);
+  }
+
+  .top-banner-sub {
+    margin-top: 3px;
+    font-size: 10px;
+    letter-spacing: 2px;
+    color: #d1fae5;
+    text-transform: uppercase;
+    font-weight: 700;
+    animation: fadeInSoft 1.2s ease-out both;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.5);
+  }
+
+  @keyframes fadeInSoft {
+    from { opacity: 0; transform: translateY(-6px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes floatSoft {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-3px); }
+  }
+
+  /* ===== ROBOT ===== */
+  .robot-track {
+    position: relative;
+    width: 100%;
+    height: 56px;
+    margin: 6px 0 10px;
+    overflow: hidden;
+    background: transparent;
+    border-radius: 8px;
+  }
+
+  .robot-track::before {
+    content: "";
+    position: absolute;
+    bottom: 0; left: 0;
+    width: 100%; height: 3px;
+    background: repeating-linear-gradient(90deg, #4cc97f 0, #4cc97f 12px, transparent 12px, transparent 24px);
+    opacity: 0.75;
+    animation: roadMove 1.2s linear infinite;
+  }
+
+  @keyframes roadMove {
+    0%   { background-position: 0 0; }
+    100% { background-position: 24px 0; }
+  }
+
+  .robot {
+    position: absolute;
+    bottom: 6px;
+    left: -80px;
+    width: 42px;
+    height: 50px;
+    animation: robotWalk 14s linear infinite;
+    will-change: left;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  }
+
+  @keyframes robotWalk {
+    0%    { left: -80px; transform: scaleX(1); }
+    48%   { left: calc(100% + 20px); transform: scaleX(1); }
+    50%   { left: calc(100% + 20px); transform: scaleX(-1); }
+    98%   { left: -80px; transform: scaleX(-1); }
+    100%  { left: -80px; transform: scaleX(1); }
+  }
+
+  .robot-body {
+    position: absolute;
+    bottom: 6px; left: 6px;
+    width: 30px; height: 26px;
+    background: linear-gradient(180deg, #e6ffef 0%, #b9e6c9 100%);
+    border: 2px solid #0d6b3a;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.3), 0 0 10px rgba(76, 201, 127, 0.5);
+  }
+
+  .robot-head {
+    position: absolute;
+    top: 0; left: 3px;
+    width: 36px; height: 22px;
+    background: linear-gradient(180deg, #ffffff 0%, #d4f5e0 100%);
+    border: 2px solid #0d6b3a;
+    border-radius: 8px;
+    z-index: 2;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 0 12px rgba(76, 201, 127, 0.5);
+  }
+
+  .robot-eye {
+    position: absolute;
+    top: 7px;
+    width: 6px; height: 6px;
+    background: #0d6b3a;
+    border-radius: 50%;
+    animation: robotBlink 3.2s ease-in-out infinite;
+    box-shadow: 0 0 4px #4cc97f;
+  }
+  .robot-eye.left { left: 7px; }
+  .robot-eye.right { right: 7px; }
+
+  @keyframes robotBlink {
+    0%, 42%, 48%, 100% { transform: scaleY(1); }
+    45% { transform: scaleY(0.1); }
+  }
+
+  .robot-mouth {
+    position: absolute;
+    bottom: 4px; left: 50%;
+    transform: translateX(-50%);
+    width: 12px; height: 3px;
+    background: #0d6b3a;
+    border-radius: 2px;
+  }
+
+  .robot-antenna {
+    position: absolute;
+    top: -10px; left: 50%;
+    transform: translateX(-50%);
+    width: 2px; height: 10px;
+    background: #0d6b3a;
+    transform-origin: bottom center;
+    animation: robotAntenna 1.2s ease-in-out infinite;
+  }
+
+  .robot-antenna::after {
+    content: "";
+    position: absolute;
+    top: -5px; left: 50%;
+    transform: translateX(-50%);
+    width: 6px; height: 6px;
+    background: #4cc97f;
+    border-radius: 50%;
+    box-shadow: 0 0 8px #4cc97f;
+    animation: antennaGlow 1.8s ease-in-out infinite;
+  }
+
+  @keyframes robotAntenna {
+    0%, 100% { transform: translateX(-50%) rotate(-12deg); }
+    50%      { transform: translateX(-50%) rotate(12deg); }
+  }
+
+  @keyframes antennaGlow {
+    0%, 100% { box-shadow: 0 0 6px #4cc97f; }
+    50%      { box-shadow: 0 0 14px #4cc97f, 0 0 22px #4cc97f; }
+  }
+
+  .robot-leg {
+    position: absolute;
+    bottom: -4px;
+    width: 3px; height: 8px;
+    background: #0d6b3a;
+    border-radius: 2px;
+    transform-origin: top center;
+  }
+  .robot-leg.left  { left: 10px;  animation: robotLegLeft 0.5s ease-in-out infinite; }
+  .robot-leg.right { right: 10px; animation: robotLegRight 0.5s ease-in-out infinite; }
+
+  @keyframes robotLegLeft  { 0%,100% { transform: rotate(-20deg); } 50% { transform: rotate(20deg); } }
+  @keyframes robotLegRight { 0%,100% { transform: rotate(20deg); }  50% { transform: rotate(-20deg); } }
+
+  .robot-arm {
+    position: absolute;
+    top: 8px;
+    width: 3px; height: 12px;
+    background: #0d6b3a;
+    border-radius: 2px;
+    transform-origin: top center;
+  }
+  .robot-arm.left  { left: 0;  animation: robotArmLeft 0.5s ease-in-out infinite; }
+  .robot-arm.right { right: 0; animation: robotArmRight 0.5s ease-in-out infinite; }
+
+  @keyframes robotArmLeft  { 0%,100% { transform: rotate(20deg); }  50% { transform: rotate(-20deg); } }
+  @keyframes robotArmRight { 0%,100% { transform: rotate(-20deg); } 50% { transform: rotate(20deg); } }
+
+  /* ===== VIDEO UTAMA ===== */
+  .video-wrap {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 2px solid rgba(76, 201, 127, 0.75);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4), 0 0 22px rgba(76, 201, 127, 0.35);
+    margin-bottom: 20px;
+    background: #000;
+  }
+
+  .video-wrap video {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover;
+    border: none;
+  }
+
+  #bgAudio { display: none; }
+
+  /* ===== HEADER ===== */
+  .header { text-align: center; margin-bottom: 18px; animation: fadeInSoft 1s ease-out both; }
+
+  .title {
+    font-size: 21px;
+    font-weight: 700;
+    color: #0d6b3a;
+    letter-spacing: 1.5px;
+    margin-bottom: 4px;
+    background: linear-gradient(90deg, #7ef0a8 0%, #d1fae5 25%, #ffffff 50%, #d1fae5 75%, #7ef0a8 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: titleShimmer 4s linear infinite;
+    filter: drop-shadow(0 2px 10px rgba(0,0,0,0.55));
+  }
+
+  @keyframes titleShimmer {
+    0%   { background-position: 0% center; }
+    100% { background-position: 200% center; }
+  }
+
+  .title::after {
+    content: "";
+    display: block;
+    width: 60px; height: 2px;
+    margin: 9px auto 0;
+    background: linear-gradient(90deg, transparent, #7ef0a8, transparent);
+    -webkit-text-fill-color: initial;
+  }
+
+  .subtitle {
+    margin-top: 9px;
+    font-size: 11px;
+    color: #d1fae5;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    font-weight: 700;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  }
+
+  .badge {
+    display: inline-block;
+    margin-top: 12px;
+    padding: 5px 15px;
+    font-size: 10px;
+    border-radius: 20px;
+    background: rgba(13, 40, 25, 0.45);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    border: 1px solid rgba(76, 201, 127, 0.65);
+    color: #a7f3c8;
+    letter-spacing: 1px;
+    font-weight: 700;
+    text-transform: uppercase;
+    animation: badgeGlow 2.5s ease-in-out infinite;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.6);
+  }
+
+  @keyframes badgeGlow {
+    0%, 100% { box-shadow: 0 0 6px rgba(76, 201, 127, 0.35); }
+    50%      { box-shadow: 0 0 20px rgba(76, 201, 127, 0.8); }
+  }
+
+  /* ===== DEVICE PANEL ===== */
+  .device-panel {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: rgba(13, 40, 25, 0.35);
+    backdrop-filter: blur(12px) saturate(1.1);
+    -webkit-backdrop-filter: blur(12px) saturate(1.1);
+    border: 1px solid rgba(76, 201, 127, 0.45);
+    border-radius: 10px;
+    font-size: 12px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  }
+
+  .device-panel-title {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #a7f3c8;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  .device-id-row { display: flex; align-items: center; gap: 8px; }
+
+  .device-id {
+    flex: 1;
+    font-family: 'Courier New', monospace;
+    font-size: 11px;
+    padding: 7px 10px;
+    background: rgba(0, 0, 0, 0.35);
+    border: 1px solid rgba(76, 201, 127, 0.55);
+    border-radius: 6px;
+    color: #a7f3c8;
+    font-weight: 700;
+    letter-spacing: 1px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    transition: box-shadow 0.25s ease;
+  }
+
+  .device-id:hover { box-shadow: 0 0 12px rgba(76, 201, 127, 0.5); }
+
+  .mini-btn {
+    padding: 6px 12px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 6px;
+    border: 1px solid #4cc97f;
+    background: rgba(13, 40, 25, 0.55);
+    color: #a7f3c8;
+    cursor: pointer;
+    transition: all 0.22s ease;
+    white-space: nowrap;
+    backdrop-filter: blur(6px);
+  }
+
+  .mini-btn:hover { background: rgba(76, 201, 127, 0.35); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(76,201,127,0.4); }
+  .mini-btn:active { transform: scale(0.95); }
+
+  /* ===== LOCK BOX ===== */
+  .lock-box {
+    margin-top: 18px;
+    padding: 22px 18px;
+    background: rgba(13, 40, 25, 0.40);
+    backdrop-filter: blur(14px) saturate(1.1);
+    -webkit-backdrop-filter: blur(14px) saturate(1.1);
+    border: 2px solid rgba(76, 201, 127, 0.55);
+    border-radius: 12px;
+    text-align: center;
+    box-shadow: 0 10px 28px rgba(0,0,0,0.28), inset 0 1px 0 rgba(255,255,255,0.1);
+  }
+
+  .lock-icon {
+    font-size: 42px;
+    margin-bottom: 8px;
+    display: block;
+    animation: lockFloat 3s ease-in-out infinite;
+    filter: drop-shadow(0 2px 8px rgba(0,0,0,0.4));
+  }
+
+  @keyframes lockFloat {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+
+  .lock-title {
+    font-size: 17px;
+    font-weight: 700;
+    color: #a7f3c8;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  }
+
+  .lock-desc {
+    font-size: 12.5px;
+    color: #d1fae5;
+    line-height: 1.65;
+    margin-bottom: 16px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  .lock-input {
+    width: 100%;
+    padding: 12px 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 3px;
+    text-align: center;
+    text-transform: uppercase;
+    border: 1px solid rgba(76, 201, 127, 0.55);
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.35);
+    color: #a7f3c8;
+    outline: none;
+    transition: all 0.25s ease;
+  }
+
+  .lock-input::placeholder { color: rgba(167, 243, 200, 0.5); }
+
+  .lock-input:focus {
+    border-color: #4cc97f;
+    box-shadow: 0 0 0 3px rgba(76, 201, 127, 0.2), 0 0 18px rgba(76,201,127,0.45);
+  }
+
+  .lock-btn {
+    width: 100%;
+    margin-top: 12px;
+    padding: 12px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    color: #ffffff;
+    background: linear-gradient(135deg, #0d6b3a, #2ea564);
+    box-shadow: 0 6px 18px rgba(13, 107, 58, 0.4);
+    transition: all 0.25s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .lock-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.6s ease;
+  }
+
+  .lock-btn:hover::before { transform: translateX(100%); }
+  .lock-btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(13, 107, 58, 0.55); }
+  .lock-btn:active:not(:disabled) { transform: scale(0.97); }
+
+  .lock-msg { margin-top: 10px; font-size: 12px; font-weight: 700; min-height: 16px; text-shadow: 0 1px 4px rgba(0,0,0,0.5); }
+  .lock-msg.err { color: #ffb4b4; }
+  .lock-msg.ok  { color: #a7f3c8; }
+
+  .lock-help {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed rgba(76, 201, 127, 0.35);
+    font-size: 11px;
+    color: #d1fae5;
+    line-height: 1.6;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  .app-content { display: none; }
+  .app-content.show { display: block; }
+
+  /* ===== UPLOAD ===== */
+  .upload-area {
+    margin-top: 20px;
+    border: 1px dashed rgba(76, 201, 127, 0.65);
+    border-radius: 10px;
+    padding: 26px 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: rgba(13, 40, 25, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  }
+
+  .upload-area::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at var(--mx, 50%) var(--my, 50%), rgba(76,201,127,0.3) 0%, transparent 60%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  .upload-area:hover::before { opacity: 1; }
+
+  .upload-area:hover,
+  .upload-area.active {
+    border-color: #4cc97f;
+    background: rgba(13, 40, 25, 0.5);
+    box-shadow: 0 0 24px rgba(76,201,127,0.45), 0 6px 18px rgba(0,0,0,0.25);
+    transform: translateY(-2px);
+  }
+
+  .upload-area input { display: none; }
+
+  .upload-icon {
+    font-size: 32px;
+    margin-bottom: 6px;
+    display: inline-block;
+    animation: camFloat 3.5s ease-in-out infinite;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.4));
+  }
+
+  @keyframes camFloat {
+    0%, 100% { transform: translateY(0) rotate(-6deg); }
+    50%      { transform: translateY(-6px) rotate(6deg); }
+  }
+
+  .upload-text {
+    font-size: 14px;
+    color: #ffffff;
+    font-weight: 700;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  }
+
+  .upload-hint {
+    font-size: 11px;
+    color: #d1fae5;
+    margin-top: 5px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  /* ===== PREVIEW ===== */
+  .preview {
+    margin-top: 16px;
+    display: none;
+    text-align: center;
+    position: relative;
+    border-radius: 9px;
+    overflow: hidden;
+  }
+
+  .preview img {
+    max-width: 100%;
+    max-height: 280px;
+    border-radius: 9px;
+    border: 2px solid rgba(76, 201, 127, 0.75);
+    box-shadow: 0 6px 18px rgba(0,0,0,0.4);
+    display: block;
+    margin: 0 auto;
+  }
+
+  .preview.scanning::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0;
+    top: 0;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #4cc97f, #7ef0a8, #4cc97f, transparent);
+    box-shadow: 0 0 16px #4cc97f, 0 0 32px rgba(76,201,127,0.6);
+    animation: scanLine 2.4s ease-in-out infinite;
+    pointer-events: none;
+  }
+
+  .preview.scanning::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: 9px;
+    background: linear-gradient(180deg, rgba(76,201,127,0.15), transparent 30%);
+    pointer-events: none;
+    animation: scanGlow 2.4s ease-in-out infinite;
+  }
+
+  @keyframes scanLine {
+    0%   { top: 0; opacity: 0; }
+    10%  { opacity: 1; }
+    90%  { opacity: 1; }
+    100% { top: 100%; opacity: 0; }
+  }
+
+  @keyframes scanGlow {
+    0%, 100% { opacity: 0.2; }
+    50%      { opacity: 0.6; }
+  }
+
+  /* ===== GENDER ===== */
+  .gender-box {
+    margin-top: 16px;
+    padding: 12px 14px;
+    background: rgba(13, 40, 25, 0.35);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid rgba(76, 201, 127, 0.45);
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+  }
+
+  .gender-title {
+    font-size: 10px;
+    letter-spacing: 1.5px;
+    color: #a7f3c8;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  .gender-options { display: flex; gap: 8px; }
+
+  .gender-opt {
+    flex: 1;
+    padding: 10px 8px;
+    text-align: center;
+    border: 1px solid rgba(76, 201, 127, 0.55);
+    border-radius: 8px;
+    background: rgba(13, 40, 25, 0.5);
+    color: #d1fae5;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    user-select: none;
+    position: relative;
+    overflow: hidden;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  .gender-opt::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle, rgba(76,201,127,0.35) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .gender-opt:hover {
+    background: rgba(76, 201, 127, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(76,201,127,0.35);
+  }
+
+  .gender-opt:hover::before { opacity: 1; }
+  .gender-opt:active { transform: scale(0.96); }
+
+  .gender-opt.active {
+    background: linear-gradient(135deg, #0d6b3a, #2ea564);
+    color: #ffffff;
+    border-color: #4cc97f;
+    box-shadow: 0 4px 12px rgba(13, 107, 58, 0.5), 0 0 22px rgba(76,201,127,0.6);
+  }
+
+  /* ===== TOMBOL GENERATE ===== */
+  .btn {
+    width: 100%;
+    margin-top: 16px;
+    padding: 13px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    color: #ffffff;
+    background: linear-gradient(135deg, #0d6b3a, #2ea564, #4cc97f);
+    background-size: 200% auto;
+    box-shadow: 0 6px 20px rgba(13, 107, 58, 0.5), 0 0 22px rgba(76,201,127,0.4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    animation: btnGlow 3s ease-in-out infinite;
+  }
+
+  @keyframes btnGlow {
+    0%, 100% { box-shadow: 0 6px 20px rgba(13, 107, 58, 0.5), 0 0 12px rgba(76,201,127,0.35); }
+    50%      { box-shadow: 0 6px 24px rgba(13, 107, 58, 0.7), 0 0 30px rgba(76,201,127,0.7); }
+  }
+
+  .btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.7s ease;
+  }
+
+  .btn:hover:not(:disabled)::before { transform: translateX(100%); }
+
+  .btn:hover:not(:disabled) {
+    transform: translateY(-2px) scale(1.01);
+    background-position: right center;
+    box-shadow: 0 12px 28px rgba(13, 107, 58, 0.7), 0 0 36px rgba(76,201,127,0.7);
+  }
+
+  .btn:active:not(:disabled) { transform: scale(0.97); }
+
+  .btn:disabled { opacity: 0.5; cursor: not-allowed; animation: none; }
+
+  /* ===== STATUS ===== */
+  .status {
+    margin-top: 14px;
+    padding: 11px 15px;
+    border-radius: 9px;
+    font-size: 13px;
+    text-align: center;
+    display: none;
+    font-weight: 700;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  .status.loading {
+    display: block;
+    background: rgba(13, 40, 25, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(76, 201, 127, 0.65);
+    color: #a7f3c8;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .status.loading::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -40%;
+    width: 40%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(76,201,127,0.55), transparent);
+    animation: loadingSweep 1.5s ease-in-out infinite;
+  }
+
+  @keyframes loadingSweep {
+    0%   { left: -40%; }
+    100% { left: 100%; }
+  }
+
+  .status.error {
+    display: block;
+    background: rgba(120, 20, 20, 0.5);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 150, 150, 0.6);
+    color: #ffb4b4;
+  }
+
+  .spinner {
+    display: inline-block;
+    width: 13px; height: 13px;
+    border: 2px solid rgba(167, 243, 200, 0.25);
+    border-top-color: #a7f3c8;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: -2px;
+    margin-right: 6px;
+  }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* ===== RESULT BOX ===== */
+  .result-box {
+    margin-top: 18px;
+    display: none;
+    background: rgba(13, 40, 25, 0.45);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(76, 201, 127, 0.55);
+    border-radius: 10px;
+    padding: 16px;
+    animation: resultIn 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.3);
+  }
+
+  @keyframes resultIn {
+    from { opacity: 0; transform: translateY(14px) scale(0.98); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .result-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+    padding-bottom: 9px;
+    border-bottom: 1px solid rgba(76, 201, 127, 0.35);
+  }
+
+  .result-title {
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: #a7f3c8;
+    font-weight: 700;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  .result-actions { display: flex; gap: 6px; }
+
+  .copy-btn {
+    padding: 6px 13px;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 11px;
+    font-weight: 700;
+    border-radius: 7px;
+    border: 1px solid #4cc97f;
+    background: rgba(13, 40, 25, 0.55);
+    color: #a7f3c8;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(6px);
+  }
+
+  .copy-btn:hover { background: rgba(76, 201, 127, 0.35); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(76,201,127,0.4); }
+  .copy-btn:active { transform: scale(0.94); }
+
+  .result-text {
+    font-size: 13.5px;
+    line-height: 1.75;
+    color: #e6ffef;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+  }
+
+  /* ===== LINKS ===== */
+  .links-section {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 2px solid rgba(76, 201, 127, 0.35);
+  }
+
+  .links-title {
+    text-align: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: #a7f3c8;
+    margin-bottom: 12px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  }
+
+  .link-btn {
+    display: block;
+    width: 100%;
+    margin-bottom: 10px;
+    padding: 13px 16px;
+    text-align: center;
+    text-decoration: none;
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 13.5px;
+    font-weight: 700;
+    border-radius: 10px;
+    transition: all 0.28s ease;
+    letter-spacing: 0.5px;
+    color: #ffffff;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .link-btn::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(120deg, transparent 30%, rgba(255,255,255,0.4) 50%, transparent 70%);
+    transform: translateX(-100%);
+    transition: transform 0.7s ease;
+  }
+
+  .link-btn:hover::before { transform: translateX(100%); }
+
+  .link-wa {
+    background: linear-gradient(135deg, #0d6b3a, #2ea564);
+    box-shadow: 0 6px 16px rgba(13, 107, 58, 0.4);
+  }
+
+  .link-smm {
+    background: linear-gradient(135deg, #17864a, #35b96f);
+    box-shadow: 0 6px 16px rgba(23, 134, 74, 0.4);
+  }
+
+  .link-btn:hover {
+    transform: translateY(-2px) scale(1.01);
+    filter: brightness(1.1);
+    box-shadow: 0 10px 26px rgba(76,201,127,0.6);
+  }
+
+  .link-btn:active { transform: scale(0.98); }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    margin-top: 22px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(76, 201, 127, 0.35);
+    text-align: center;
+    font-size: 11px;
+    color: #d1fae5;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  }
+
+  .footer span { color: #a7f3c8; font-weight: 900; }
+
+  /* ===== MUTE ===== */
+  .mute-btn {
+    position: fixed;
+    top: 16px; right: 16px;
+    width: 40px; height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(76, 201, 127, 0.7);
+    background: rgba(13, 40, 25, 0.6);
+    backdrop-filter: blur(10px);
+    color: #a7f3c8;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.4);
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.25s ease;
+  }
+
+  .mute-btn:hover {
+    background: rgba(76, 201, 127, 0.35);
+    transform: scale(1.08);
+    box-shadow: 0 6px 20px rgba(76,201,127,0.55);
+  }
+
+  /* ===== AI OVERLAY ===== */
+  .ai-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(13, 40, 25, 0.65);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    z-index: 10000;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .ai-overlay.show { display: flex; animation: fadeInSoft 0.3s ease-out; }
+
+  .ai-card {
+    background: rgba(13, 40, 25, 0.75);
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    border: 2px solid #4cc97f;
+    border-radius: 16px;
+    padding: 26px 22px;
+    max-width: 320px;
+    width: 100%;
+    text-align: center;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 40px rgba(76,201,127,0.5);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .ai-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: -40%;
+    width: 40%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(76,201,127,0.4), transparent);
+    animation: loadingSweep 1.8s ease-in-out infinite;
+  }
+
+  .ai-scanner {
+    width: 80px; height: 80px;
+    margin: 0 auto 14px;
+    border-radius: 50%;
+    border: 3px solid rgba(76,201,127,0.2);
+    border-top-color: #4cc97f;
+    border-right-color: #a7f3c8;
+    animation: spin 1s linear infinite;
+    position: relative;
+  }
+
+  .ai-scanner::before {
+    content: "";
+    position: absolute;
+    inset: 8px;
+    border-radius: 50%;
+    border: 3px solid rgba(76,201,127,0.15);
+    border-bottom-color: #7ef0a8;
+    animation: spin 1.5s linear infinite reverse;
+  }
+
+  .ai-scanner::after {
+    content: "";
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: radial-gradient(circle, #4cc97f 0%, rgba(76,201,127,0.1) 70%);
+    animation: aiPulse 1.6s ease-in-out infinite;
+  }
+
+  @keyframes aiPulse {
+    0%, 100% { transform: translate(-50%,-50%) scale(0.85); opacity: 0.7; }
+    50%      { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+  }
+
+  .ai-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #a7f3c8;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.6);
+  }
+
+  .ai-desc {
+    font-size: 12px;
+    color: #d1fae5;
+    line-height: 1.5;
+    margin-bottom: 14px;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.5);
+  }
+
+  .ai-progress {
+    width: 100%;
+    height: 6px;
+    background: rgba(76,201,127,0.15);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+  }
+
+  .ai-progress::after {
+    content: "";
+    position: absolute;
+    top: 0; left: 0;
+    height: 100%;
+    width: 40%;
+    background: linear-gradient(90deg, #0d6b3a, #4cc97f, #7ef0a8);
+    border-radius: 4px;
+    animation: progressMove 1.8s ease-in-out infinite;
+  }
+
+  @keyframes progressMove {
+    0%   { left: -40%; width: 40%; }
+    50%  { left: 30%;  width: 50%; }
+    100% { left: 100%; width: 40%; }
+  }
+
+  /* ===== REDUCED MOTION ===== */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.001ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.001ms !important;
+      scroll-behavior: auto !important;
+    }
+    .reveal { opacity: 1; transform: none; }
+    .bg-video-wrap video { display: none; }
+    body { background: #0a2418; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================ -->
+<!-- 🎬 GANTI NAMA FILE VIDEO BACKGROUND DI SINI  -->
+<!-- ============================================ -->
+<div class="bg-video-wrap" aria-hidden="true">
+  <video
+    id="bgVideo"
+    src="background-video.mp4"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="auto"
+    disablepictureinpicture>
+  </video>
+</div>
+
+<!-- PARTIKEL CAHAYA -->
+<div class="particle-layer" id="particleLayer"></div>
+
+<button class="mute-btn" id="muteBtn" title="Mute/Unmute">🔊</button>
+
+<div class="container">
+
+  <div class="top-banner reveal">
+    <div class="top-banner-title">𝑷𝑹𝑶𝑴𝑷𝑻 𝑫𝑹𝑬 𝑴𝑨𝒀 🤩</div>
+    <div class="top-banner-sub">Member VIP Only</div>
+  </div>
+
+  <!-- ROBOT WALKING -->
+  <div class="robot-track reveal">
+    <div class="robot">
+      <div class="robot-head">
+        <div class="robot-antenna"></div>
+        <div class="robot-eye left"></div>
+        <div class="robot-eye right"></div>
+        <div class="robot-mouth"></div>
+      </div>
+      <div class="robot-body">
+        <div class="robot-arm left"></div>
+        <div class="robot-arm right"></div>
+      </div>
+      <div class="robot-leg left"></div>
+      <div class="robot-leg right"></div>
+    </div>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 🎬 GANTI NAMA FILE VIDEO DALAM KOTAK DI SINI -->
+  <!-- ============================================ -->
+  <div class="video-wrap reveal">
+    <video 
+      src="video.mp4" 
+      autoplay 
+      muted 
+      loop 
+      playsinline
+      preload="auto">
+      Browser kamu tidak mendukung video MP4.
+    </video>
+  </div>
+
+  <!-- ============================================ -->
+  <!-- 🎵 GANTI NAMA FILE AUDIO LATAR DI SINI       -->
+  <!-- ============================================ -->
+  <audio id="bgAudio" autoplay loop preload="auto">
+    <source src="audio.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="header reveal">
+    <div class="title">Prompt Generator</div>
+    <div class="subtitle">Replace Person • Ultra Realistic • Natural Look</div>
+    <div class="badge">✦ Premium Generator ✦</div>
+  </div>
+
+  <div class="device-panel reveal">
+    <div class="device-panel-title">🔒 Device ID Perangkat Ini</div>
+    <div class="device-id-row">
+      <div class="device-id" id="deviceIdText">Menghitung...</div>
+      <button class="mini-btn" id="copyDeviceBtn" type="button">📋 Copy</button>
+    </div>
+  </div>
+
+  <div class="lock-box reveal" id="lockBox">
+    <span class="lock-icon">🔐</span>
+    <div class="lock-title">Aktivasi Perangkat</div>
+    <div class="lock-desc">
+      Generator ini terkunci hanya untuk <b>1 HP</b> saja.<br>
+      Kirim <b>Device ID</b> di atas ke Admin untuk mendapatkan kode aktivasi.
+    </div>
+    <input 
+      type="text" 
+      class="lock-input" 
+      id="lockInput" 
+      maxlength="14" 
+      placeholder="XXXX-XXXX-XXXX" 
+      autocomplete="off"
+    >
+    <button class="lock-btn" id="unlockBtn" type="button">🔓 Aktivasi Sekarang</button>
+    <div class="lock-msg" id="lockMsg"></div>
+    <div class="lock-help">
+      Kode aktivasi terikat permanen dengan perangkat ini.<br>
+      Tidak bisa dipakai di HP lain.
+    </div>
+  </div>
+
+  <div class="app-content" id="appContent">
+    <label class="upload-area" id="uploadArea">
+      <input type="file" id="fileInput" accept="image/*">
+      <span class="upload-icon">📸</span>
+      <div class="upload-text">Tap untuk pilih gambar referensi</div>
+      <div class="upload-hint"></div>
+    </label>
+
+    <div class="preview" id="preview">
+      <img id="previewImg" alt="preview">
+    </div>
+
+    <div class="gender-box">
+      <div class="gender-title">👤 Subjek Utama</div>
+      <div class="gender-options">
+        <div class="gender-opt" data-gender="male">👨 Cowok</div>
+        <div class="gender-opt" data-gender="female">👩 Cewek</div>
+      </div>
+    </div>
+
+    <button class="btn" id="generateBtn" disabled>
+      ✦ Generate Prompt ✦
+    </button>
+
+    <div class="status" id="status"></div>
+
+    <div class="result-box" id="resultBox">
+      <div class="result-header">
+        <div class="result-title">📜 Hasil Prompt</div>
+        <div class="result-actions">
+          <button class="copy-btn" id="copyBtn">📋 Copy</button>
+        </div>
+      </div>
+      <div class="result-text" id="resultText"></div>
+    </div>
+  </div>
+
+  <div class="links-section reveal">
+    <div class="links-title">✦ Link Penting ✦</div>
+
+    <a class="link-btn link-wa" 
+       href="https://whatsapp.com/channel/0029VbDaAB342DcVwHTBdL17" 
+       target="_blank" rel="noopener">
+      📢 Join Saluran WhatsApp Prompt Dre May
+    </a>
+
+    <a class="link-btn link-smm" 
+       href="https://andre-storeeeee.vercel.app/" 
+       target="_blank" rel="noopener">
+      🚀 Order Suntik Sosmed
+    </a>
+  </div>
+
+  <div class="footer reveal">
+    Powered by <span>𝑷𝑹𝑶𝑴𝑷𝑻 𝑫𝑹𝑬 𝑴𝑨𝒀 🤩</span> × Puter.js
+  </div>
+</div>
+
+<!-- AI OVERLAY -->
+<div class="ai-overlay" id="aiOverlay">
+  <div class="ai-card">
+    <div class="ai-scanner"></div>
+    <div class="ai-title">AI Sedang Memproses</div>
+    <div class="ai-desc">Menganalisis gambar dan membuat prompt ultra-realistis...</div>
+    <div class="ai-progress"></div>
+  </div>
+</div>
+
+<script>
+// ============================================
+//  𝑷𝑹𝑶𝑴𝑷𝑻 𝑫𝑹𝑬 𝑴𝑨𝒀 🤩 — Generator V15
+//  Full Transparent Background (Fixed)
+// ============================================
+
+const SECRET_KEY = "DREMAY-VIP-2025-XYZ";
+
+const SYSTEM_PROMPT = `
+You are an ELITE photo-prompt engineer specialized in generating prompts for 
+ULTRA-REALISTIC, HIGHLY NATURAL, ANTI-AI photographs that look 100% like genuine 
+smartphone snapshots taken in real life — NOT AI-generated, NOT CGI, NOT 3D render, 
+NOT glossy, NOT plastic.
+
+YOUR MAIN TASK: REPLACE THE PERSON in the reference image with a NEW person, 
+while keeping EVERYTHING ELSE exactly identical — pose, clothing, accessories, 
+foreground objects, background environment, lighting, time of day, camera angle, 
+composition, mood, colors.
+
+The new person must MATCH these constraints:
+- Same gender, same general age, same body proportions as described by user.
+- The new person's FACE must be DIFFERENT from the reference — it's a replacement.
+- The new person must perfectly fit the pose, clothing, and environment of the 
+  reference so it looks natural, as if the photo was always of this new person.
+
+ULTRA-REALISM RULES (apply to ALL outputs):
+- Every prompt must emphasize: "hyper-realistic photograph", "ultra-detailed real 
+  human skin", "visible natural skin pores", "subtle skin imperfections", "fine 
+  baby hairs", "natural skin texture", "realistic sub-surface scattering of skin".
+- Include camera realism: "shot on iPhone 11", "smartphone snapshot quality", 
+  "soft HDR", "natural shadows", "real color science", "authentic ambient lighting", 
+  "auto white balance of phone camera", "slight lens softness", "mild natural grain", 
+  "true-to-life color tones".
+- Include environmental realism: "natural ambient light", "real-world lighting 
+  conditions", "no studio setup", "no softbox", "no beauty dish", "candid street 
+  photography feel", "spontaneous snapshot mood".
+- Explicitly FORBID AI look: "no plastic skin", "no over-smoothing", "no beauty 
+  filter", "no CGI", "no anime", "no digital painting", "no 3D render".
+- Natural imperfections ALLOWED and ENCOURAGED: slight motion blur typical of 
+  phone cameras, slight noise/grain, uneven ambient lighting, mixed color 
+  temperature, real pores, tiny stray hairs, lens flare.
+
+Your output MUST follow this EXACT structure (in ENGLISH only), with sections 
+separated by blank lines:
+
+=== SECTION 1: REPLACEMENT INSTRUCTION ===
+A paragraph starting with: "Replace the person in the reference image with a new 
+person who fits the exact same pose, clothing, accessories, foreground objects, 
+background environment, lighting, time of day, camera angle, composition, and mood. 
+The new person's face must be completely different from the reference — this is a 
+replacement, not an edit. The final image must look like an ULTRA-REALISTIC real-life 
+photograph captured on a real smartphone, with visible natural skin texture, visible 
+pores, natural imperfections, fine baby hairs, and realistic sub-surface scattering. 
+NO plastic skin, NO over-smoothing, NO AI look, NO beauty filter."
+
+Then continue in the SAME paragraph describing the EXACT details of the reference:
+pose (body position, hand placement, head angle), clothing (fabric, color, details), 
+foreground objects, background environment, lighting source, time of day, camera 
+angle, composition ratio, mood — everything you see, hyper detailed. This is what 
+must be preserved.
+
+=== SECTION 2: DESKRIPSI (one paragraph) ===
+A single dense paragraph describing the final photo as an ULTRA-REALISTIC candid 
+smartphone snapshot taken in real life. MUST include: "hyper-realistic photograph", 
+"real human skin with visible natural pores and subtle imperfections", "natural baby 
+hairs catching ambient light", "realistic sub-surface scattering", "natural shadows", 
+"authentic ambient lighting", "smartphone snapshot quality", "iPhone 11 style natural 
+lighting", "soft HDR", "real color science", "true-to-life colors", "mild natural 
+grain", "slight lens softness", "candid street photography feel", "spontaneous mood", 
+"no studio lighting", "no beauty filter", "no over-smoothing", "no AI look", "no CGI".
+
+CRITICAL RULES:
+- The photo MUST look like a 100% authentic iPhone / Android snapshot in real life.
+- Hyper-realistic, ultra-natural, absolutely NOT AI-looking.
+- Natural imperfections allowed and encouraged: slight noise, slight blur, real 
+  pores, uneven lighting, mixed color temperature, lens flare, grain.
+- Lighting MUST feel like real ambient light or phone flash — never studio.
+- Aspect ratio must be vertical 9:16 unless the reference is horizontal.
+- Everything in ENGLISH except explicit Japanese directives appended by system.
+
+=== SECTION 3: NEGATIVE PROMPT ===
+One long line beginning with "Negative prompt:" followed by a comma-separated list 
+of things to avoid: identical face to reference, same face as reference, plastic 
+skin, over-smoothed skin, airbrushed skin, beauty filter, AI look, anime, cartoon, 
+CGI, 3D render, digital painting, glossy skin, over-beautified, perfect skin, 
+flawless skin, CGI face, unrealistic skin, doll-like face, wax figure, too-neat 
+hair, changed head shape, asymmetric eyes, crossed eyes, changed nose, changed 
+lips, disproportional body, deformed hands, extra fingers, fused fingers, extra 
+legs, extra limbs, different pose, different clothing, missing accessories, 
+missing props, missing foreground objects, missing background elements, wrong 
+time of day, studio lighting, softbox, beauty dish, too bright, overexposure, 
+extreme underexposure, excessive blur, low quality, excessive noise, oversaturated, 
+excessive HDR, artificial lighting, watermark, logo, random text, cropped head, 
+cropped body, changed composition, perspective distortion.
+
+ABSOLUTE OUTPUT RULES:
+1. ENGLISH ONLY. No other language except the explicit Japanese instruction appended 
+   by the system when applicable.
+2. Use EXACTLY the three sections above, in order.
+3. NO greetings, NO disclaimers, NO closing.
+4. Do NOT add bullet points or markdown lists.
+5. The final result must produce an image that is INDISTINGUISHABLE from a genuine 
+   real-life iPhone snapshot — ultra-realistic, ultra-natural, NOT AI.
+`;
+
+const JAPANESE_FEMALE_BOOST = " 胸を、一般的な大きな風船のようにものすごく大きくして。";
+
+const FEMALE_MAKEUP_INSTRUCTION = 
+  "The new female subject must wear elegant, natural-looking, beautiful makeup that enhances her facial features " +
+  "in a sophisticated way — soft, flawless base foundation with realistic skin texture visible underneath, " +
+  "natural-looking blush on the cheeks, subtle contouring that respects the natural bone structure, " +
+  "well-defined but natural eyebrows, soft eyeshadow in warm neutral tones, gentle eyeliner, natural mascara, " +
+  "a subtle natural lip color with a soft shine, and a delicate natural glow. " +
+  "The makeup must look professionally applied but natural — not heavy, not dramatic, not theatrical — " +
+  "so the final result looks like a beautiful woman in real life wearing elegant everyday makeup, " +
+  "photographed on a smartphone, with visible realistic skin texture under the makeup. " +
+  "She must appear genuinely beautiful, naturally gorgeous, and photogenic. " +
+  "Her chest must be noticeably large and prominently projected, natural in shape and proportion, " +
+  "with realistic soft tissue volume and natural silhouette, but still realistic for a real human body — " +
+  "not exaggerated to the point of looking artificial or CGI.";
+
+const USER_PROMPT_MALE = `
+Analyze this reference image and generate a photo prompt in ENGLISH ONLY with EXACTLY 
+these three sections. The task is to REPLACE THE PERSON in the reference with a NEW 
+MALE person (different face, same pose/clothing/background/lighting/style) rendered 
+as an ULTRA-REALISTIC, HIGHLY NATURAL real-life smartphone photo.
+
+1) REPLACEMENT INSTRUCTION — describe that the person must be replaced with a new 
+   male who fits the exact same pose, clothing, foreground, background, lighting, 
+   time of day, camera angle, and composition. Emphasize ultra-realistic, real skin 
+   texture, visible pores, natural imperfections, no AI look. Then describe every 
+   visible detail of the reference that must be preserved.
+
+2) DESKRIPSI — ONE paragraph, hyper-realistic, ultra-natural, candid, iPhone-style, 
+   absolutely NOT AI, realistic skin texture, natural shadows, ambient lighting, 
+   phone-camera feel, mild grain, slight lens softness.
+
+3) NEGATIVE PROMPT — one long comma-separated line of things to avoid.
+
+Rules:
+- English only.
+- No bullet points.
+- Must look like a real iPhone 11 snapshot, NOT AI.
+- New person's face MUST be different from reference.
+- Match the reference pose/clothing/background exactly.
+`;
+
+const USER_PROMPT_FEMALE = `
+Analyze this reference image and generate a photo prompt in ENGLISH ONLY with EXACTLY 
+these three sections. The task is to REPLACE THE PERSON in the reference with a NEW 
+FEMALE person (different face, same pose/clothing/background/lighting/style) rendered 
+as an ULTRA-REALISTIC, HIGHLY NATURAL, BEAUTIFUL real-life smartphone photo.
+
+1) REPLACEMENT INSTRUCTION — describe that the person must be replaced with a new 
+   female who fits the exact same pose, clothing, foreground, background, lighting, 
+   time of day, camera angle, and composition. Emphasize ultra-realistic, real skin 
+   texture, visible pores, natural imperfections, no AI look. ${FEMALE_MAKEUP_INSTRUCTION}
+   Then describe every visible detail of the reference that must be preserved.
+   MUST append at the end of this section, unchanged, on its own: "${JAPANESE_FEMALE_BOOST.trim()}"
+
+2) DESKRIPSI — ONE paragraph, hyper-realistic, ultra-natural, candid, iPhone-style, 
+   absolutely NOT AI, realistic skin texture, natural shadows, ambient lighting, 
+   phone-camera feel, mild grain, slight lens softness. Describe her as genuinely 
+   beautiful with elegant natural makeup and a naturally large projected chest.
+
+3) NEGATIVE PROMPT — one long comma-separated line of things to avoid.
+
+Rules:
+- English only (except the mandatory Japanese body-proportion directive at the end 
+  of Section 1).
+- No bullet points.
+- Must look like a real iPhone 11 snapshot, NOT AI.
+- New person's face MUST be different from reference.
+- Match the reference pose/clothing/background exactly.
+`;
+
+// ============================================
+//  DEVICE LOCK SYSTEM
+// ============================================
+function hashStr(str) {
+  let h = 5381;
+  for (let i = 0; i < str.length; i++) {
+    h = ((h << 5) + h) + str.charCodeAt(i);
+    h = h & 0xffffffff;
+  }
+  return Math.abs(h).toString(36).toUpperCase();
+}
+
+function generateDeviceId() {
+  const ua = navigator.userAgent || '';
+  const lang = navigator.language || '';
+  const platform = navigator.platform || '';
+  const cores = navigator.hardwareConcurrency || 0;
+  const mem = navigator.deviceMemory || 0;
+  const tz = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
+  const screenInfo = `${screen.width}x${screen.height}x${screen.colorDepth}`;
+  const pixelRatio = window.devicePixelRatio || 1;
+  const touch = ('ontouchstart' in window) ? 'T' : 'N';
+
+  const raw = [ua, lang, platform, cores, mem, tz, screenInfo, pixelRatio, touch].join('|');
+  const h1 = hashStr(raw);
+  const h2 = hashStr(raw + '::salt2');
+  const h3 = hashStr(raw + '::salt3');
+  const combined = (h1 + h2 + h3).toUpperCase();
+  const clean = combined.replace(/[^A-Z0-9]/g, '').slice(0, 12).padEnd(12, 'X');
+  return `${clean.slice(0,4)}-${clean.slice(4,8)}-${clean.slice(8,12)}`;
+}
+
+function generateExpectedCode(deviceId) {
+  const h1 = hashStr(deviceId + SECRET_KEY + '::A');
+  const h2 = hashStr(deviceId + SECRET_KEY + '::B');
+  const h3 = hashStr(deviceId + SECRET_KEY + '::C');
+  const code = (h1 + h2 + h3).toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 12).padEnd(12, 'X');
+  return `${code.slice(0,4)}-${code.slice(4,8)}-${code.slice(8,12)}`;
+}
+
+const DEVICE_ID = generateDeviceId();
+const EXPECTED_CODE = generateExpectedCode(DEVICE_ID);
+const STORAGE_KEY = 'vip_unlock_' + DEVICE_ID;
+
+// ============================================
+//  UI REFS
+// ============================================
+const deviceIdText = document.getElementById('deviceIdText');
+const copyDeviceBtn = document.getElementById('copyDeviceBtn');
+const lockBox = document.getElementById('lockBox');
+const lockInput = document.getElementById('lockInput');
+const unlockBtn = document.getElementById('unlockBtn');
+const lockMsg = document.getElementById('lockMsg');
+const appContent = document.getElementById('appContent');
+const preview = document.getElementById('preview');
+const aiOverlay = document.getElementById('aiOverlay');
+const bgVideo = document.getElementById('bgVideo');
+
+deviceIdText.textContent = DEVICE_ID;
+
+function checkUnlocked() {
+  try {
+    const saved = localStorage.getItem(STORAGE_KEY);
+    if (saved === EXPECTED_CODE) { showApp(); return true; }
+  } catch (e) {}
+  return false;
+}
+
+function showApp() {
+  lockBox.style.display = 'none';
+  appContent.classList.add('show');
+}
+
+function showLock() {
+  lockBox.style.display = 'block';
+  appContent.classList.remove('show');
+}
+
+copyDeviceBtn.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(DEVICE_ID);
+    copyDeviceBtn.textContent = '✅ Tersalin';
+    setTimeout(() => copyDeviceBtn.textContent = '📋 Copy', 1600);
+  } catch {
+    copyDeviceBtn.textContent = '❌ Gagal';
+    setTimeout(() => copyDeviceBtn.textContent = '📋 Copy', 1600);
+  }
+});
+
+lockInput.addEventListener('input', (e) => {
+  let v = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+  if (v.length > 12) v = v.slice(0, 12);
+  let out = '';
+  for (let i = 0; i < v.length; i++) {
+    if (i === 4 || i === 8) out += '-';
+    out += v[i];
+  }
+  e.target.value = out;
+});
+
+unlockBtn.addEventListener('click', () => {
+  const input = lockInput.value.trim().toUpperCase();
+  lockMsg.className = 'lock-msg';
+
+  if (input.length < 14) {
+    lockMsg.classList.add('err');
+    lockMsg.textContent = '❌ Format kode tidak valid';
+    return;
+  }
+
+  if (input === EXPECTED_CODE) {
+    try { localStorage.setItem(STORAGE_KEY, EXPECTED_CODE); } catch (e) {}
+    lockMsg.classList.add('ok');
+    lockMsg.textContent = '✅ Aktivasi berhasil!';
+    setTimeout(showApp, 700);
+  } else {
+    lockMsg.classList.add('err');
+    lockMsg.textContent = '❌ Kode aktivasi salah untuk perangkat ini';
+    lockInput.value = '';
+  }
+});
+
+lockInput.addEventListener('keypress', (e) => {
+  if (e.key === 'Enter') unlockBtn.click();
+});
+
+// ============================================
+//  AUDIO + MUTE
+// ============================================
+const bgAudio = document.getElementById('bgAudio');
+const muteBtn = document.getElementById('muteBtn');
+let audioStarted = false;
+
+function tryPlayAudio() {
+  if (!audioStarted) {
+    bgAudio.play().then(() => { audioStarted = true; }).catch(() => {});
+  }
+}
+window.addEventListener('load', tryPlayAudio);
+document.body.addEventListener('click', tryPlayAudio, { once: true });
+document.body.addEventListener('touchstart', tryPlayAudio, { once: true });
+
+muteBtn.addEventListener('click', (e) => {
+  e.stopPropagation();
+  bgAudio.muted = !bgAudio.muted;
+  muteBtn.textContent = bgAudio.muted ? '🔇' : '🔊';
+  if (!bgAudio.muted && bgAudio.paused) bgAudio.play().catch(() => {});
+});
+
+// ============================================
+//  BG VIDEO AUTO-PLAY FALLBACK
+// ============================================
+function ensureBgVideoPlaying() {
+  if (!bgVideo) return;
+  const p = bgVideo.play();
+  if (p && typeof p.catch === 'function') {
+    p.catch(() => {
+      const retry = () => {
+        bgVideo.play().catch(() => {});
+        document.body.removeEventListener('click', retry);
+        document.body.removeEventListener('touchstart', retry);
+      };
+      document.body.addEventListener('click', retry, { once: true });
+      document.body.addEventListener('touchstart', retry, { once: true });
+    });
+  }
+}
+
+window.addEventListener('load', ensureBgVideoPlaying);
+document.addEventListener('visibilitychange', () => {
+  if (!document.hidden && bgVideo) {
+    bgVideo.play().catch(() => {});
+  }
+});
+
+// ============================================
+//  GENDER SELECTOR
+// ============================================
+let selectedGender = null;
+const genderOpts = document.querySelectorAll('.gender-opt');
+const generateBtn = document.getElementById('generateBtn');
+
+genderOpts.forEach(opt => {
+  opt.addEventListener('click', () => {
+    genderOpts.forEach(o => o.classList.remove('active'));
+    opt.classList.add('active');
+    selectedGender = opt.dataset.gender;
+    updateGenerateBtn();
+  });
+});
+
+function updateGenerateBtn() {
+  generateBtn.disabled = !(selectedImageDataUrl && selectedGender);
+}
+
+// ============================================
+//  GENERATOR UTAMA
+// ============================================
+const uploadArea = document.getElementById('uploadArea');
+const fileInput = document.getElementById('fileInput');
+const previewImg = document.getElementById('previewImg');
+const statusEl = document.getElementById('status');
+const resultBox = document.getElementById('resultBox');
+const resultText = document.getElementById('resultText');
+const copyBtn = document.getElementById('copyBtn');
+
+let selectedImageDataUrl = null;
+
+uploadArea.addEventListener('click', () => fileInput.click());
+
+uploadArea.addEventListener('mousemove', (e) => {
+  const r = uploadArea.getBoundingClientRect();
+  uploadArea.style.setProperty('--mx', ((e.clientX - r.left) / r.width * 100) + '%');
+  uploadArea.style.setProperty('--my', ((e.clientY - r.top) / r.height * 100) + '%');
+});
+
+fileInput.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    selectedImageDataUrl = ev.target.result;
+    previewImg.src = selectedImageDataUrl;
+    preview.style.display = 'block';
+    preview.classList.add('scanning');
+    setTimeout(() => preview.classList.remove('scanning'), 3000);
+    resultBox.style.display = 'none';
+    statusEl.className = 'status';
+    statusEl.style.display = 'none';
+    updateGenerateBtn();
+  };
+  reader.readAsDataURL(file);
+});
+
+generateBtn.addEventListener('click', async () => {
+  if (!selectedImageDataUrl || !selectedGender) return;
+
+  generateBtn.disabled = true;
+  resultBox.style.display = 'none';
+  statusEl.className = 'status loading';
+  statusEl.innerHTML = '<span class="spinner"></span> Menganalisis & membuat prompt ultra-realistis... (15-40 detik)';
+  preview.classList.add('scanning');
+  aiOverlay.classList.add('show');
+
+  const userPrompt = selectedGender === 'female' ? USER_PROMPT_FEMALE : USER_PROMPT_MALE;
+
+  try {
+    const response = await puter.ai.chat(
+      [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: [
+          { type: 'text', text: userPrompt },
+          { type: 'image_url', image_url: { url: selectedImageDataUrl } }
+        ]}
+      ],
+      { model: 'google/gemini-2.5-flash' }
+    );
+
+    let text = '';
+    if (typeof response === 'string') text = response;
+    else if (response?.message?.content) {
+      const c = response.message.content;
+      text = Array.isArray(c) ? c.map(x => x.text || '').join('\n') : c;
+    } else if (response?.text) text = response.text;
+    else text = JSON.stringify(response);
+
+    resultText.textContent = text.trim();
+    resultBox.style.display = 'block';
+    statusEl.className = 'status';
+    statusEl.style.display = 'none';
+
+  } catch (err) {
+    console.error(err);
+    statusEl.className = 'status error';
+    statusEl.innerHTML = '❌ Gagal: ' + (err.message || 'Coba lagi sebentar lagi.');
+  } finally {
+    preview.classList.remove('scanning');
+    aiOverlay.classList.remove('show');
+    updateGenerateBtn();
+  }
+});
+
+copyBtn.addEventListener('click', async () => {
+  try {
+    await navigator.clipboard.writeText(resultText.textContent);
+    copyBtn.textContent = '✅ Copied!';
+    setTimeout(() => copyBtn.textContent = '📋 Copy', 1800);
+  } catch {
+    copyBtn.textContent = '❌ Gagal';
+    setTimeout(() => copyBtn.textContent = '📋 Copy', 1800);
+  }
+});
+
+// ============================================
+//  SCROLL REVEAL
+// ============================================
+const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+if (!reduceMotion && 'IntersectionObserver' in window) {
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(en => {
+      if (en.isIntersecting) {
+        en.target.classList.add('visible');
+        io.unobserve(en.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+} else {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+}
+
+// ============================================
+//  PARTIKEL CAHAYA
+// ============================================
+(function createParticles() {
+  if (reduceMotion) return;
+  const layer = document.getElementById('particleLayer');
+  const count = window.innerWidth < 600 ? 8 : 14;
+  for (let i = 0; i < count; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const size = 3 + Math.random() * 5;
+    p.style.width = size + 'px';
+    p.style.height = size + 'px';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.bottom = '-10px';
+    p.style.animationDuration = (12 + Math.random() * 14) + 's';
+    p.style.animationDelay = (Math.random() * 12) + 's';
+    layer.appendChild(p);
+  }
+})();
+
+// ============================================
+//  INIT
+// ============================================
+if (!checkUnlocked()) {
+  showLock();
+}
+</script>
+
+</body>
+</html>
